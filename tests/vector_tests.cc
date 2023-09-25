@@ -35,6 +35,20 @@ TEST(vector_tests,constructor_params) {
 	delete[] cf_coords;
 	delete[] cd_coords;
 }
+//2
+TEST(vector_tests, constructor_random_params) {
+	auto i_vect = vector<int>(3, 4,8);
+	auto f_vect = vector<float>(2, 8.99,100.32453);
+	auto d_vect = vector<double>(2,5.77,473.45678);
+	auto cf_vect = vector<std::complex<float>>(2, 1,3);
+	auto cd_vect = vector<std::complex<double>>(2, 5,9);
+	ASSERT_EQ(i_vect.get_coord(1), 7);
+	ASSERT_NEAR(f_vect.get_coord(0),21.3637, 0.001);
+	ASSERT_NEAR(d_vect.get_coord(1), 396.292, 0.001);
+	ASSERT_NEAR(cf_vect.get_coord(1).real(),1.44207, 0.001);
+	ASSERT_NEAR(cd_vect.get_coord(0).imag(), 5.54191, 0.001);
+}
+//3
 TEST(vector_tests, overloading_brackets) {
 	int* i_coords = new int[2];
 	float* f_coords = new float[2];
@@ -56,7 +70,8 @@ TEST(vector_tests, overloading_brackets) {
 	auto d_vect = vector<double>(2, d_coords);
 	auto cf_vect = vector<std::complex<float>>(2, cf_coords);
 	auto cd_vect = vector<std::complex<double>>(2, cd_coords);
-	ASSERT_EQ(i_vect[1], 20);
+	i_vect[0] = 33;
+	ASSERT_EQ(i_vect[0], 33);
 	ASSERT_NEAR(f_vect[0], 0.03, 0.000000001);
 	ASSERT_NEAR(d_vect[1], 20.2343, 0.000000001);
 	ASSERT_NEAR(cf_vect[1].real(), 2.509, 0.001);
@@ -66,4 +81,92 @@ TEST(vector_tests, overloading_brackets) {
 	delete[] d_coords;
 	delete[] cf_coords;
 	delete[] cd_coords;
+}
+
+//4
+TEST(vector_tests, get_length) {
+	int* i_coords = new int[2];
+	float* f_coords = new float[2];
+	double* d_coords = new double[2];
+	std::complex<float>* cf_coords = new std::complex<float>[2];
+	std::complex<double>* cd_coords = new std::complex<double>[2];
+	i_coords[1] = 20;
+	i_coords[0] = 0;
+	f_coords[1] = 20.23;
+	f_coords[0] = 0.03;
+	d_coords[1] = 3.0;
+	d_coords[0] = 4.0;
+	cf_coords[0] = { 2.23, 4.45 };
+	cf_coords[1] = { 2.509, 9.451 };
+	cd_coords[0] = { 6.0092, 499.45757 };
+	cd_coords[1] = { 2.504939, 7548.451 };
+	auto i_vect = vector<int>(2, i_coords);
+	auto f_vect = vector<float>(2, f_coords);
+	auto d_vect = vector<double>(2, d_coords);
+	auto cf_vect = vector<std::complex<float>>(2, cf_coords);
+	auto cd_vect = vector<std::complex<double>>(2, cd_coords);
+	ASSERT_EQ(i_vect.get_length(), 20);
+	ASSERT_NEAR(f_vect.get_length(), 20.23, 0.01);
+	ASSERT_NEAR(d_vect.get_length(), 5.0, 0.001);
+	//ASSERT_NEAR(cf_vect.get_coord(1).real(), 2.509, 0.001);
+	//ASSERT_NEAR(cd_vect.get_coord(0).imag(), 499.45757, 0.001);
+	delete[] i_coords;
+	delete[] f_coords;
+	delete[] d_coords;
+	delete[] cf_coords;
+	delete[] cd_coords;
+}
+//5
+TEST(vector_tests, operator_dif_eq) {
+	int* coords1 = new int[2];
+	int* coords2 = new int[2];
+	std::complex<float>* cf_coords1 = new std::complex<float>[2];
+	std::complex<float>* cf_coords2 = new std::complex<float>[2];
+	coords1[0] = 9;
+	coords1[1] = 17;
+	coords2[0] = 1;
+	coords2[1] = 1;
+	auto vect1 = vector<int>(2, coords1);
+	auto vect2 = vector<int>(2, coords2);
+	vect1 -= vect2;
+	cf_coords1[0] = { 1.1,2.2 };
+	cf_coords1[1] = { 1.1,2.2 };
+	cf_coords2[0] = { 1,2.1 };
+	cf_coords2[1] = { 1.1,0.1 };
+	auto cf_vect1 = vector<std::complex<float>>(2, cf_coords1);
+	auto cf_vect2 = vector<std::complex<float>>(2, cf_coords2);
+	cf_vect1 -= cf_vect2;
+	ASSERT_NEAR(cf_vect1[1].imag(), 2.1, 0.01);
+	ASSERT_EQ(vect1[1], 16);
+    delete[] coords1;
+	delete[] coords2;
+	delete[] cf_coords1;
+	delete[] cf_coords2;
+}
+//6
+TEST(vector_tests, operator_sum_eq) {
+	int* coords1 = new int[2];
+	int* coords2 = new int[2];
+	std::complex<float>* cf_coords1 = new std::complex<float>[2];
+	std::complex<float>* cf_coords2 = new std::complex<float>[2];
+	coords1[0] = 9;
+	coords1[1] = 17;
+	coords2[0] = 1;
+	coords2[1] = 1;
+	auto vect1 = vector<int>(2, coords1);
+	auto vect2 = vector<int>(2, coords2);
+	vect1 += vect2;
+	cf_coords1[0] = { 1.1,2.2 };
+	cf_coords1[1] = { 1.1,2.2 };
+	cf_coords2[0] = { 1,2.1 };
+	cf_coords2[1] = { 1.1,0.1 };
+	auto cf_vect1 = vector<std::complex<float>>(2, cf_coords1);
+	auto cf_vect2 = vector<std::complex<float>>(2, cf_coords2);
+	cf_vect1 += cf_vect2;
+	ASSERT_NEAR(cf_vect1[1].imag(), 2.3, 0.01);
+	ASSERT_EQ(vect1[1], 18);
+	delete[] coords1;
+	delete[] coords2;
+	delete[] cf_coords1;
+	delete[] cf_coords2;
 }
