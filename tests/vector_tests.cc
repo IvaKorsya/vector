@@ -11,8 +11,8 @@ TEST(vector_tests,constructor_params) {
 	std::complex<double>* cd_coords = new std::complex<double>[2];
 	i_coords[1] = 20;
 	i_coords[0] = 0;
-	f_coords[1] = (float)20.23;
-	f_coords[0] = (float)0.03;
+	f_coords[1] = 20.23f;
+	f_coords[0] = 0.03f;
 	d_coords[1] = 20.2343;
 	d_coords[0] = 0.2223;
 	cf_coords[0] = { 2.23, 4.45 };
@@ -85,37 +85,20 @@ TEST(vector_tests, overloading_brackets) {
 
 //4
 TEST(vector_tests, get_length) {
-	int* i_coords = new int[2];
-	float* f_coords = new float[2];
-	double* d_coords = new double[2];
-	std::complex<float>* cf_coords = new std::complex<float>[2];
-	std::complex<double>* cd_coords = new std::complex<double>[2];
-	i_coords[1] = 20;
-	i_coords[0] = 0;
-	f_coords[1] = 20.23;
-	f_coords[0] = 0.03;
-	d_coords[1] = 3.0;
-	d_coords[0] = 4.0;
-	cf_coords[0] = { 2.23, 4.45 };
-	cf_coords[1] = { 2.509, 9.451 };
-	cd_coords[0] = { 6.0092, 499.45757 };
-	cd_coords[1] = { 2.504939, 7548.451 };
-	auto i_vect = vector<int>(2, i_coords);
-	auto f_vect = vector<float>(2, f_coords);
-	auto d_vect = vector<double>(2, d_coords);
-	auto cf_vect = vector<std::complex<float>>(2, cf_coords);
-	auto cd_vect = vector<std::complex<double>>(2, cd_coords);
-	ASSERT_EQ(i_vect.get_length(), 20);
-	ASSERT_NEAR(f_vect.get_length(), 20.23, 0.01);
-	ASSERT_NEAR(d_vect.get_length(), 5.0, 0.001);
-	//ASSERT_NEAR(cf_vect.get_coord(1).real(), 2.509, 0.001);
-	//ASSERT_NEAR(cd_vect.get_coord(0).imag(), 499.45757, 0.001);
-	delete[] i_coords;
-	delete[] f_coords;
-	delete[] d_coords;
-	delete[] cf_coords;
-	delete[] cd_coords;
+	int* coords1 = new int[2];
+	std::complex<float>* cf_coords1 = new std::complex<float>[2];
+	coords1[0] = 9;
+	coords1[1] = 17;
+	cf_coords1[0] = { 1.1,2.2 };
+	cf_coords1[1] = { 1.1,2.2 };
+	auto vect1 = vector<int>(2, coords1);
+	auto cf_vect1 = vector<std::complex<float>>(2, cf_coords1);
+	ASSERT_NEAR(vect1.get_length(), 19.235, 0.001);
+	ASSERT_NEAR(cf_vect1.get_length().real(), 1.55, 0.01);
+	delete[] coords1;
+	delete[] cf_coords1;
 }
+
 //5
 TEST(vector_tests, operator_dif_eq) {
 	int* coords1 = new int[2];
@@ -169,4 +152,60 @@ TEST(vector_tests, operator_sum_eq) {
 	delete[] coords2;
 	delete[] cf_coords1;
 	delete[] cf_coords2;
+}
+//7
+TEST(vector_tests, copy_constructor) {
+	int* coords1 = new int[2];
+	std::complex<float>* cf_coords1 = new std::complex<float>[2];
+	coords1[0] = 9;
+	coords1[1] = 17;
+	cf_coords1[0] = { 1.1,2.2 };
+	cf_coords1[1] = { 1.1,2.2 };
+	auto vect1 = vector<int>(2, coords1);
+	auto cf_vect1 = vector<std::complex<float>>(2, cf_coords1);
+	auto copy_vect(vect1);
+	auto copy_cf_vect(cf_vect1);
+	ASSERT_NEAR(copy_cf_vect[1].imag(), 2.2, 0.01);
+	ASSERT_EQ(copy_vect[1], 17);
+	delete[] coords1;
+	delete[] cf_coords1;
+}
+//8
+TEST(vector_tests, operator_sum) {
+	int* coords1 = new int[2];
+	std::complex<float>* cf_coords1 = new std::complex<float>[2];
+	coords1[0] = 9;
+	coords1[1] = 17;
+	cf_coords1[0] = { 1.1,2.2 };
+	cf_coords1[1] = { 1.1,2.2 };
+	auto vect1 = vector<int>(2, coords1);
+	auto cf_vect1 = vector<std::complex<float>>(2, cf_coords1);
+	auto copy_vect(vect1);
+	auto copy_cf_vect(cf_vect1);
+	auto sum_vect=copy_vect + vect1+copy_vect;
+	auto sum_c_vect = cf_vect1 + cf_vect1 + copy_cf_vect;
+	ASSERT_NEAR(sum_c_vect[1].imag(), 6.6, 0.01);
+	ASSERT_EQ(sum_vect[1], 51);
+	delete[] coords1;
+	delete[] cf_coords1;
+}
+
+//9
+TEST(vector_tests, operator_dif) {
+	int* coords1 = new int[2];
+	std::complex<float>* cf_coords1 = new std::complex<float>[2];
+	coords1[0] = 9;
+	coords1[1] = 17;
+	cf_coords1[0] = { 1.1,2.2 };
+	cf_coords1[1] = { 1.1,2.2 };
+	auto vect1 = vector<int>(2, coords1);
+	auto cf_vect1 = vector<std::complex<float>>(2, cf_coords1);
+	auto copy_vect(vect1);
+	auto copy_cf_vect(cf_vect1);
+	auto sum_vect = copy_vect - vect1 - copy_vect;
+	auto sum_c_vect = cf_vect1 - cf_vect1 - copy_cf_vect;
+	ASSERT_NEAR(sum_c_vect[1].imag(), -2.2, 0.01);
+	ASSERT_EQ(sum_vect[1], -17);
+	delete[] coords1;
+	delete[] cf_coords1;
 }

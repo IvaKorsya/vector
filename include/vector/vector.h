@@ -15,6 +15,12 @@ public:
 		}
 	}
 
+	vector(const vector& copy) :_cnt_coords(copy._cnt_coords), _coords(new T[_cnt_coords]) {
+		for (size_t i = 0; i < _cnt_coords; ++i) {
+			_coords[i] = copy[i];
+		}
+	}
+
 	vector(size_t cnt_coords, double min_value, double max_value) : _cnt_coords(cnt_coords), _coords(new T[_cnt_coords]) {
 		std::mt19937 re;
 		std::uniform_real_distribution<double> dist(min_value, max_value);
@@ -22,7 +28,7 @@ public:
 			_coords[i] = dist(re);
 		}
 	}
-
+	//overloaded operators
 	T& operator[] (size_t index)
 	{
 		if (index < 0 || index >= _cnt_coords) {
@@ -40,19 +46,43 @@ public:
 	}
 
 	vector& operator+=(const vector& second) {
+		if (second._cnt_coords!=this->_cnt_coords) {
+			throw std::invalid_argument("unequal_lengths");
+		}
 		for (size_t i = 0; i < _cnt_coords; ++i) {
 			this->_coords[i] += second._coords[i];
 		}
 		return *this;
 	}
 
+	friend vector operator+(const vector& first,const vector& second){
+		auto copy(first);
+		return copy+=second;
+	}
+
+	vector& operator=(const vector& second) {
+		_cnt_coords = second._cnt_coords;
+		for (size_t i = 0; i < _cnt_coords; ++i) {
+			_coords[i] = second[i];
+		}
+	}
+
 	vector& operator-=(const vector& second) {
+		if (second._cnt_coords != this->_cnt_coords) {
+			throw std::invalid_argument("unequal_lengths");
+		}
 		for (size_t i = 0; i < _cnt_coords; ++i) {
 			this->_coords[i] -= second._coords[i];
 		}
 		return *this;
 	}
 
+	friend vector operator-(const vector& first, const vector& second) {
+		auto copy(first);
+		return copy -= second;
+	}
+
+	//methods
 	T get_coord(int i) {
 		if (i < 0 || i >= _cnt_coords) {
 			throw std::out_of_range("invalid_index");
@@ -97,6 +127,13 @@ public:
 		}
 	}
 
+	vector(const vector<std::complex<T>>& copy) :_cnt_coords(copy._cnt_coords), _coords(new std::complex<T>[_cnt_coords]) {
+		for (size_t i = 0; i < _cnt_coords; ++i) {
+			_coords[i] = copy[i];
+		}
+	}
+
+	//overloaded operators
 	std::complex<T>& operator[] (size_t i)
 	{
 		if (i < 0 || i >= _cnt_coords) {
@@ -114,25 +151,43 @@ public:
 	}
 
 	vector<std::complex<T>>& operator+=(const vector<std::complex<T>>& second) {
+		if (second._cnt_coords != this->_cnt_coords) {
+			throw std::invalid_argument("unequal_lengths");
+		}
 		for (size_t i = 0; i < _cnt_coords; ++i) {
 			this->_coords[i] += second._coords[i];
 		}
 		return *this;
 	}
 
+	friend vector<std::complex<T>> operator+(const vector<std::complex<T>>& first, const vector<std::complex<T>>& second) {
+		auto copy(first);
+		return copy += second;
+	}
+
 	vector<std::complex<T>>& operator-=(const vector<std::complex<T>>& second) {
+		if (second._cnt_coords != this->_cnt_coords) {
+			throw std::invalid_argument("unequal_lengths");
+		}
 		for (size_t i = 0; i < _cnt_coords; ++i) {
 			this->_coords[i] -= second._coords[i];
 		}
 		return *this;
 	}
-	/*double get_length() {
-		double sum = 0;
+
+	friend vector<std::complex<T>> operator-(const vector<std::complex<T>>& first, const vector<std::complex<T>>& second) {
+		auto copy(first);
+		return copy -= second;
+	}
+
+	//methods
+	std::complex<T> get_length() {
+		std::complex<T> sum = { 0.0, 0.0 };
 		for (size_t i = 0; i < _cnt_coords; ++i) {
-			sum += pow(_coords[i], 2);
+			sum += std::pow(_coords[i],2);
 		}
-		return sqrtf(sum);
-	}*/
+		return std::sqrt(sum);
+	}
 
 	std::complex<T> get_coord(int i) {
 		if (i < 0 || i >= _cnt_coords) {
