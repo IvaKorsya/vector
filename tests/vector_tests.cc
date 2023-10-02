@@ -209,3 +209,85 @@ TEST(vector_tests, operator_dif) {
 	delete[] coords1;
 	delete[] cf_coords1;
 }
+
+//10
+TEST(vector_tests, operator_mult) {
+	int* coords1 = new int[2];
+	std::complex<float>* cf_coords1 = new std::complex<float>[2];
+	coords1[0] = 9;
+	coords1[1] = 17;
+	cf_coords1[0] = { 1.1,2.2 };
+	cf_coords1[1] = { 1.1,2.2 };
+	auto vect1 = vector<int>(2, coords1);
+	auto cf_vect1 = vector<std::complex<float>>(2, cf_coords1);
+	auto copy_vect(vect1);
+	auto copy_cf_vect(cf_vect1);
+	double mult_vect = vect1 * copy_vect;
+	auto c_mult_vect = copy_cf_vect * cf_vect1;
+	auto mult = vect1 * 3;
+	auto mult1 = 3 * vect1;
+	auto c_mult = cf_vect1 * 3;
+	auto c_mult1 = 3* cf_vect1;
+	ASSERT_EQ(mult_vect,81+289);
+	ASSERT_EQ(mult[1], 17*3);
+	ASSERT_EQ(mult1[1], 17 * 3);
+	ASSERT_NEAR(c_mult_vect.imag(), 0, 0.01);
+	ASSERT_NEAR(c_mult[1].imag(), 6.6, 0.01);
+	ASSERT_NEAR(c_mult1[1].imag(), 6.6, 0.01);
+	delete[] coords1;
+	delete[] cf_coords1;
+}
+
+//11
+TEST(vector_tests, operator_div) {
+	int* coords1 = new int[2];
+	std::complex<float>* cf_coords1 = new std::complex<float>[2];
+	coords1[0] = 9;
+	coords1[1] = 17;
+	cf_coords1[0] = { 1.1,2.2 };
+	cf_coords1[1] = { 1.1,2.2 };
+	auto vect1 = vector<int>(2, coords1);
+	auto cf_vect1 = vector<std::complex<float>>(2, cf_coords1);
+	auto div_vec = vect1/3;
+	auto c_div_vec= cf_vect1/3;
+	ASSERT_EQ(div_vec[0], 3);
+	ASSERT_NEAR(c_div_vec[1].real(), 0.366, 0.01);
+	delete[] coords1;
+	delete[] cf_coords1;
+}
+//12
+TEST(vector_tests, operator_comp_eq) {
+	int* coords1 = new int[2];
+	std::complex<float>* cf_coords1 = new std::complex<float>[2];
+	coords1[0] = 9;
+	coords1[1] = 17;
+	cf_coords1[0] = { 1.1,2.2 };
+	cf_coords1[1] = { 1.1,2.2 };
+	auto vect1 = vector<int>(2, coords1);
+	auto cf_vect1 = vector<std::complex<float>>(2, cf_coords1);
+	auto copy(vect1);
+	auto copy_cf(cf_vect1);
+	ASSERT_TRUE(copy == vect1);
+	ASSERT_TRUE(copy_cf == cf_vect1);
+	delete[] coords1;
+	delete[] cf_coords1;
+}
+//13
+TEST(vector_tests, operator_comp_uneq) {
+	int* coords1 = new int[2];
+	std::complex<float>* cf_coords1 = new std::complex<float>[2];
+	coords1[0] = 9;
+	coords1[1] = 17;
+	cf_coords1[0] = { 1.1,2.2 };
+	cf_coords1[1] = { 1.1,2.2 };
+	auto vect1 = vector<int>(2, coords1);
+	auto cf_vect1 = vector<std::complex<float>>(2, cf_coords1);
+	auto copy(vect1);
+	auto copy_cf(cf_vect1);
+	copy *= 2;
+	copy_cf *= 5;
+	ASSERT_TRUE(copy != vect1);
+	ASSERT_TRUE(copy_cf != cf_vect1);
+	delete[] coords1;
+	delete[] cf_coords1;
+}
