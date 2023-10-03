@@ -291,3 +291,44 @@ TEST(vector_tests, operator_comp_uneq) {
 	delete[] coords1;
 	delete[] cf_coords1;
 }
+
+//13
+TEST(vector_tests, calculate_parallelogram_angles) {
+	int* coords1 = new int[3];
+	int* coords2 = new int[3];
+	std::complex<float>* cf_coords1 = new std::complex<float>[3];
+	std::complex<float>* cf_coords2 = new std::complex<float>[3];
+	coords1[0] = 4;
+	coords1[1] = 3;
+	coords1[2] = 0;
+	coords2[0] = 0;
+	coords2[1] = 12;
+	coords2[2] = 5;
+	cf_coords1[0] = { 4, 0};
+	cf_coords1[1] = { 3,0};
+	cf_coords1[2] = { 0,0 };
+	cf_coords2[0] = { 0, 0 };
+	cf_coords2[1] = { 12,0 };
+	cf_coords2[2] = { 5,0 };
+	auto vect1 = vector<int>(3, coords1);
+	auto vect2 = vector<int>(3, coords2);
+	auto cf_vect1 = vector<std::complex<float>>(3, cf_coords1);
+	auto cf_vect2 = vector<std::complex<float>>(3, cf_coords2);
+	double* angl = new double[2];
+	std::complex<float>* angl_c = new std::complex<float>[2];
+	angl = calculate_parallelogram_angles(vect1, vect2);
+	angl_c = calculate_parallelogram_angles(cf_vect1,cf_vect2);
+	ASSERT_NEAR(angl[1] + angl[0], 180,0.001);
+	ASSERT_NEAR(angl[0], 56.36, 0.01);
+	ASSERT_NEAR(angl[1], 123.63, 0.01);
+	ASSERT_NEAR(angl_c[0].real(), 0.553, 0.01);
+	ASSERT_NEAR(angl_c[0].imag(), 0, 0.01);
+	ASSERT_NEAR(angl_c[1].real(), -0.553, 0.01);
+	ASSERT_NEAR(angl_c[1].imag(), 0, 0.01);
+	delete[] coords1;
+	delete[] coords2;
+	delete[] angl;
+	delete[] angl_c;
+	delete[] cf_coords1;
+	delete[] cf_coords2;
+}

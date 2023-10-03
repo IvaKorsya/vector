@@ -137,23 +137,32 @@ public:
 	friend bool operator!=(const vector& first, const vector& second) {
 		return !(first == second);
 	}
+
+	friend std::ostream& operator<<(std::ostream& os, const vector& vect) {
+		os << "{ ";
+		for (size_t i = 0; i < vect._cnt_coords; ++i) {
+			os << vect[i] << " ";
+		}
+		os << "}";
+		return os;
+	}
 	//methods
-	T get_coord(int i) {
+	T get_coord(int i) const {
 		if (i < 0 || i >= _cnt_coords) {
 			throw std::out_of_range("invalid_index");
 		}
 		return _coords[i];
 	}
 
-	double get_length() {
+	double get_length() const {
 		double sum = 0;
-		for(size_t i = 0; i < _cnt_coords; ++i) {
-			sum += pow(_coords[i], 2);
+		for(size_t i = 0; i < this->_cnt_coords; ++i) {
+			sum += pow(this->_coords[i], 2);
 		}
 		return sqrtf(sum);
 	}
 
-	size_t get_cnt_coords() {
+	size_t get_cnt_coords() const {
 		return _cnt_coords;
 	}
 
@@ -290,8 +299,17 @@ public:
 	friend bool operator!=(const vector<std::complex<T>>& first, const vector<std::complex<T>>& second) {
 		return !(first == second);
 	}
+
+	friend std::ostream& operator<<(std::ostream& os, const vector<std::complex<T>>& vect) {
+		os << "{ ";
+		for (size_t i = 0; i < vect._cnt_coords; ++i) {
+			os << vect[i] << " ";
+		}
+		os << "}";
+		return os;
+	}
 	//methods
-	std::complex<T> get_length() {
+	std::complex<T> get_length() const {
 		std::complex<T> sum = { 0.0, 0.0 };
 		for (size_t i = 0; i < _cnt_coords; ++i) {
 			sum += std::pow(_coords[i],2);
@@ -299,7 +317,7 @@ public:
 		return std::sqrt(sum);
 	}
 
-	std::complex<T> get_coord(int i) {
+	std::complex<T> get_coord(int i) const {
 		if (i < 0 || i >= _cnt_coords) {
 			throw std::out_of_range("invalid_index");
 		}
@@ -310,3 +328,21 @@ public:
 		delete[] _coords;
 	}
 };
+
+template<class T>
+double* calculate_parallelogram_angles(const vector<T>& first, const vector<T>& second) {
+	double* angles = new double[2];
+	double cos1 = (first * second) / ((first.get_length()) * (second.get_length()));
+	double cos2 = -cos1;
+	angles[0] = acos(cos1)*180/3.141592;
+	angles[1] = acos(cos2) * 180 / 3.141592;
+	return angles;
+}
+
+template<class T>
+std::complex<T>* calculate_parallelogram_angles(const vector<std::complex<T>>& first, const vector<std::complex<T>>& second) {
+	std::complex<T>* angles = new std::complex<T>[2];
+	angles[0] = (first * second) / ((first.get_length()) * (second.get_length()));
+	angles[1] = -angles[0];
+	return angles;
+}
