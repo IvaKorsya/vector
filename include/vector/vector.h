@@ -39,6 +39,7 @@ public:
 	}
 
 	vector& operator=(const vector& second) {
+		if (_cnt_coords != second._cnt_coords) { _coords = new T[second._cnt_coords]; }
 		_cnt_coords = second._cnt_coords;
 		for (size_t i = 0; i < _cnt_coords; ++i) {
 			_coords[i] = second[i];
@@ -63,9 +64,8 @@ public:
 		return *this;
 	}
 
-	friend vector operator+(const vector& first,const vector& second){
-		auto copy(first);
-		return copy+=second;
+	friend vector operator+(vector first,const vector& second){
+		return first+=second;
 	}
 
 	vector& operator-=(const vector& second) {
@@ -215,6 +215,14 @@ public:
 		return _coords[i];
 	}
 
+	vector<std::complex<T>>& operator=(const vector<std::complex<T>>& second) {
+		if (_cnt_coords != second._cnt_coords) { _coords = new std::complex<T>[second._cnt_coords]; }
+		_cnt_coords = second._cnt_coords;
+		for (size_t i = 0; i < _cnt_coords; ++i) {
+			_coords[i] = second[i];
+		}
+	}
+
 	vector<std::complex<T>>& operator+=(const vector<std::complex<T>>& second) {
 		if (second._cnt_coords != this->_cnt_coords) {
 			throw std::invalid_argument("unequal_lengths");
@@ -225,9 +233,8 @@ public:
 		return *this;
 	}
 
-	friend vector<std::complex<T>> operator+(const vector<std::complex<T>>& first, const vector<std::complex<T>>& second) {
-		auto copy(first);
-		return copy += second;
+	friend vector<std::complex<T>> operator+(vector<std::complex<T>> first, const vector<std::complex<T>>& second) {
+		return first += second;
 	}
 
 	vector<std::complex<T>>& operator-=(const vector<std::complex<T>>& second) {

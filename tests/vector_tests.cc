@@ -182,7 +182,7 @@ TEST(vector_tests, operator_sum) {
 	auto cf_vect1 = vector<std::complex<float>>(2, cf_coords1);
 	auto copy_vect(vect1);
 	auto copy_cf_vect(cf_vect1);
-	auto sum_vect=copy_vect + vect1+copy_vect;
+	auto sum_vect = copy_vect + vect1+copy_vect;
 	auto sum_c_vect = cf_vect1 + cf_vect1 + copy_cf_vect;
 	ASSERT_NEAR(sum_c_vect[1].imag(), 6.6, 0.01);
 	ASSERT_EQ(sum_vect[1], 51);
