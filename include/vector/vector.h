@@ -39,7 +39,10 @@ public:
 	}
 
 	vector& operator=(const vector& second) {
-		if (_cnt_coords != second._cnt_coords) { _coords = new T[second._cnt_coords]; }
+		if (_cnt_coords != second._cnt_coords) {
+			delete[] _coords;
+			_coords = new T[second._cnt_coords]; 
+		}
 		_cnt_coords = second._cnt_coords;
 		for (size_t i = 0; i < _cnt_coords; ++i) {
 			_coords[i] = second[i];
@@ -90,14 +93,12 @@ public:
 		return *this;
 	}
 
-	friend vector operator*(const vector& first, const double value) {
-		auto copy(first);
-		return copy *= value;
+	friend vector operator*(vector first, const double value) {
+		return first *= value;
 	}
 
-	friend vector operator*(const double value,const vector& first) {
-		auto copy(first);
-		return copy *= value;
+	friend vector operator*(const double value,vector first) {
+		return first *= value;
 	}
 
 	friend double operator*(const vector& first, const vector& second) {
@@ -121,9 +122,8 @@ public:
 		return *this;
 	}
 
-	friend vector operator/(const vector& first, const double value) {
-		auto copy(first);
-		return copy /= value;
+	friend vector operator/(vector first, const double value) {
+		return first /= value;
 	}
 
 	friend bool operator==(const vector& first, const vector& second) {
@@ -216,7 +216,10 @@ public:
 	}
 
 	vector<std::complex<T>>& operator=(const vector<std::complex<T>>& second) {
-		if (_cnt_coords != second._cnt_coords) { _coords = new std::complex<T>[second._cnt_coords]; }
+		if (_cnt_coords != second._cnt_coords) { 
+			delete[] _coords;
+			_coords = new std::complex<T>[second._cnt_coords]; 
+		}
 		_cnt_coords = second._cnt_coords;
 		for (size_t i = 0; i < _cnt_coords; ++i) {
 			_coords[i] = second[i];
@@ -247,9 +250,8 @@ public:
 		return *this;
 	}
 
-	friend vector<std::complex<T>> operator-(const vector<std::complex<T>>& first, const vector<std::complex<T>>& second) {
-		auto copy(first);
-		return copy -= second;
+	friend vector<std::complex<T>> operator-(vector<std::complex<T>> first, const vector<std::complex<T>>& second) {
+		return first -= second;
 	}
 
 	vector<std::complex<T>>& operator*=(const double value) {
@@ -259,14 +261,12 @@ public:
 		return *this;
 	}
 
-	friend vector<std::complex<T>> operator*(const vector<std::complex<T>>& first, const double value) {
-		auto copy(first);
-		return copy *= value;
+	friend vector<std::complex<T>> operator*(vector<std::complex<T>> first, const double value) {
+		return first *= value;
 	}
 
-	friend vector<std::complex<T>> operator*(const double value, const vector<std::complex<T>>& first) {
-		auto copy(first);
-		return copy *= value;
+	friend vector<std::complex<T>> operator*(const double value, vector<std::complex<T>> first) {
+		return first *= value;
 	}
 
 	friend std::complex<T> operator*(const vector<std::complex<T>>& first, const vector<std::complex<T>>& second) {
@@ -290,9 +290,8 @@ public:
 		return *this;
 	}
 
-	friend vector<std::complex<T>> operator/(const vector& first, const double value) {
-		auto copy(first);
-		return copy /= value;
+	friend vector<std::complex<T>> operator/(vector first, const double value) {
+		return first /= value;
 	}
 
 	friend bool operator==(const vector<std::complex<T>>& first, const vector<std::complex<T>>& second) {
